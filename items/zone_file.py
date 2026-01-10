@@ -33,6 +33,9 @@ from dns.rdtypes.ANY.TXT import TXT
 
 from dns.zone import NoSOA, NoNS
 
+def split_txt_record(value: str, max_length:int=255 ) -> list[str]:
+    return [value[i : i + max_length] for i in range(0, len(value.strip().strip('"')), max_length)]
+
 allowed_records = {
     'NS': {
         'class': dns.rdataclass.IN,
@@ -67,7 +70,7 @@ allowed_records = {
     'TXT': {
         'class': dns.rdataclass.IN,
         'type': dns.rdatatype.TXT,
-        'obj': lambda x: TXT(dns.rdataclass.IN, dns.rdatatype.TXT, x)
+        'obj': lambda x: TXT(dns.rdataclass.IN, dns.rdatatype.TXT, split_txt_record(x))
     },
 }
 
